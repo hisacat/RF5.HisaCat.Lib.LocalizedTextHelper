@@ -408,7 +408,7 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
 
             public static string GetText(UITextDic.DICID dicid, SystemLanguage language)
             {
-                if (IsReady(language) == false)
+                if (IsGameDataReady() == false)
                     throw new RF5DataWasNotLoaded($"{nameof(UIText)} {typeof(UITextDic)} was not loaded yet. please wait for \"{nameof(UITextDic.SystemIdDic)}\" returns not empty.");
 
                 //Return SV.UIRes.GetSystemText if target language is current language.
