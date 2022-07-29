@@ -505,7 +505,7 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             }
             public static string GetText(MonsterDataTable monsterDataTable, SystemLanguage language)
             {
-                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERNAME_000 + ((int)monsterDataTable.MonsterId - 1));
+                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERDETAIL_000 + ((int)monsterDataTable.MonsterId - 1));
                 return UIText.GetText(dicId, language);
             }
             public static string GetText(MonsterDataTable monsterDataTable)
