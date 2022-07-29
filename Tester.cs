@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace RF5.HisaCat.Lib.LocalizedTextHelper
 {
@@ -10,76 +11,27 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
     {
         public static void DoTest()
         {
-            //MonsterID.fair
+            LocalizedText.PrepareLocalizedTextTypeAllSupportedLanguages(onAllSuccess: () =>
             {
-                var lang = UnityEngine.SystemLanguage.Arabic;
-                LocalizedText.ItemUIName.Prepare(lang, onSuccess: () =>
-                {
-                    var text = LocalizedText.ItemUIName.GetText(ItemID.Item_Rabunomidorinku, lang);
-                    BepInExLoader.log.LogMessage($"{lang} - {text}");
-                }, onFailed: (r) =>
-                {
-                    BepInExLoader.log.LogMessage($"{lang} - failed");
-                });
-            }
-            return;
-            {
-                var lang = UnityEngine.SystemLanguage.English;
-                LocalizedText.ItemUIName.Prepare(lang, onSuccess: () =>
-                {
-                    var text = LocalizedText.ItemUIName.GetText(ItemID.Item_Rabunomidorinku, lang);
-                    BepInExLoader.log.LogMessage($"{lang} - {text}");
-                }, onFailed: (r) =>
-                {
-                    BepInExLoader.log.LogMessage($"{lang} - failed");
-                });
-            }
+                var supportLangs = new SystemLanguage[] {
+                    SystemLanguage.English,
+                    SystemLanguage.Japanese,
+                    SystemLanguage.ChineseSimplified,
+                    SystemLanguage.ChineseTraditional,
+                    SystemLanguage.Korean,
+                    SystemLanguage.French,
+                    SystemLanguage.German
+                };
 
-            {
-                var lang = UnityEngine.SystemLanguage.Korean;
-                LocalizedText.ItemUIDiscript.Prepare(lang, onSuccess: () =>
-                {
-                    var text = LocalizedText.ItemUIDiscript.GetText(ItemID.Item_Rabunomidorinku, lang);
-                    BepInExLoader.log.LogMessage($"{lang} - {text}");
-                }, onFailed: (r) =>
-                {
-                    BepInExLoader.log.LogMessage($"{lang} - failed");
-                });
-            }
-            {
-                var lang = UnityEngine.SystemLanguage.English;
-                LocalizedText.ItemUIDiscript.Prepare(lang, onSuccess: () =>
-                {
-                    var text = LocalizedText.ItemUIDiscript.GetText(ItemID.Item_Rabunomidorinku, lang);
-                    BepInExLoader.log.LogMessage($"{lang} - {text}");
-                }, onFailed: (r) =>
-                {
-                    BepInExLoader.log.LogMessage($"{lang} - failed");
-                });
-            }
+                foreach (var lang in supportLangs)
+                    BepInExLoader.log.LogMessage($"{lang} - {LocalizedText.ItemUIName.GetText(ItemID.Item_Rabunomidorinku, lang)}");
 
-            {
-                var lang = UnityEngine.SystemLanguage.Korean;
-                LocalizedText.UIText.Prepare(lang, onSuccess: () =>
-                {
-                    var text = LocalizedText.UIText.GetText(UITextDic.DICID.ADV_BED_OK, lang);
-                    BepInExLoader.log.LogMessage($"{lang} - {text}");
-                }, onFailed: (r) =>
-                {
-                    BepInExLoader.log.LogMessage($"{lang} - failed");
-                });
-            }
-            {
-                var lang = UnityEngine.SystemLanguage.English;
-                LocalizedText.UIText.Prepare(lang, onSuccess: () =>
-                {
-                    var text = LocalizedText.UIText.GetText(UITextDic.DICID.ADV_BED_OK, lang);
-                    BepInExLoader.log.LogMessage($"{lang} - {text}");
-                }, onFailed: (r) =>
-                {
-                    BepInExLoader.log.LogMessage($"{lang} - failed");
-                });
-            }
+                foreach (var lang in supportLangs)
+                    BepInExLoader.log.LogMessage($"{lang} - {LocalizedText.ItemUIDiscript.GetText(ItemID.Item_Rabunomidorinku, lang)}");
+
+                foreach (var lang in supportLangs)
+                    BepInExLoader.log.LogMessage($"{lang} - {LocalizedText.UIText.GetText(UITextDic.DICID.ADV_BED_OK, lang)}");
+            });
         }
     }
 }

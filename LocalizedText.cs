@@ -76,45 +76,95 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             ItemUIDiscript,
             UIText,
         }
-        public static void PrepareLocalizedTextTypeAllSupportedLanguages(System.Action<LocalizedTextType, SystemLanguage> onSuccess = null, System.Action<LocalizedTextType, SystemLanguage, Loader.AssetHandle> onFailed = null)
+        public static void PrepareLocalizedTextTypeAllSupportedLanguages(System.Action onAllSuccess = null, System.Action<LocalizedTextType, SystemLanguage> onSuccess = null, System.Action<LocalizedTextType, SystemLanguage, Loader.AssetHandle> onFailed = null)
         {
+            HashSet<LocalizedTextType> waitTypes = new HashSet<LocalizedTextType>() {
+                    LocalizedTextType.ItemUIName,
+                    LocalizedTextType.ItemUIDiscript,
+                    LocalizedTextType.UIText,
+                };
+            var _onAllSuccess = new System.Action<LocalizedTextType>((type) =>
+            {
+                waitTypes.Remove(type);
+                if (waitTypes != null && waitTypes.Count <= 0)
+                {
+                    onAllSuccess?.Invoke();
+                    onAllSuccess = null;
+                }
+            });
+            var _onFailed = new System.Action<LocalizedTextType, SystemLanguage, Loader.AssetHandle>((type, language, handle) =>
+            {
+                onFailed?.Invoke(type, language, handle);
+                if (waitTypes != null)
+                    waitTypes = null;
+            });
+
             ItemUIName.PrepareAllSupportedLanguages(
+                onAllSuccess: () => _onAllSuccess(LocalizedTextType.ItemUIName),
                 onSuccess: (language) => onSuccess?.Invoke(LocalizedTextType.ItemUIName, language),
-                onFailed: (language, handle) => onFailed?.Invoke(LocalizedTextType.ItemUIName, language, handle));
+                onFailed: (language, handle) => _onFailed(LocalizedTextType.ItemUIName, language, handle));
             ItemUIDiscript.PrepareAllSupportedLanguages(
+                onAllSuccess: () => _onAllSuccess(LocalizedTextType.ItemUIDiscript),
                 onSuccess: (language) => onSuccess?.Invoke(LocalizedTextType.ItemUIDiscript, language),
-                onFailed: (language, handle) => onFailed?.Invoke(LocalizedTextType.ItemUIDiscript, language, handle));
+                onFailed: (language, handle) => _onFailed(LocalizedTextType.ItemUIDiscript, language, handle));
             UIText.PrepareAllSupportedLanguages(
+                onAllSuccess: () => _onAllSuccess(LocalizedTextType.UIText),
                 onSuccess: (language) => onSuccess?.Invoke(LocalizedTextType.UIText, language),
-                onFailed: (language, handle) => onFailed?.Invoke(LocalizedTextType.UIText, language, handle));
+                onFailed: (language, handle) => _onFailed(LocalizedTextType.UIText, language, handle));
         }
 
         public static class ItemUIName
         {
             internal static Dictionary<SystemLanguage, UISystemTextData> TextDic = null;
-            public static void PrepareAllSupportedLanguages(System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
+            public static void PrepareAllSupportedLanguages(System.Action onAllSuccess = null, System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
             {
+                HashSet<SystemLanguage> waitLangs = new HashSet<SystemLanguage>() {
+                    SystemLanguage.English,
+                    SystemLanguage.Japanese,
+                    SystemLanguage.ChineseSimplified,
+                    SystemLanguage.ChineseTraditional,
+                    SystemLanguage.Korean,
+                    SystemLanguage.French,
+                    SystemLanguage.German
+                };
+                var _onSuccess = new System.Action<SystemLanguage>((language) =>
+                {
+                    onSuccess?.Invoke(language);
+                    waitLangs.Remove(language);
+                    if (waitLangs != null && waitLangs.Count <= 0)
+                    {
+                        onAllSuccess?.Invoke();
+                        onAllSuccess = null;
+                    }
+                });
+                var _onFailed = new System.Action<SystemLanguage, Loader.AssetHandle>((language, handle) =>
+                {
+                    onFailed?.Invoke(language, handle);
+                    if (waitLangs != null)
+                        waitLangs = null;
+                });
+
                 Prepare(SystemLanguage.English,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.English),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.English, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.English),
+                    onFailed: (r) => _onFailed(SystemLanguage.English, r));
                 Prepare(SystemLanguage.Japanese,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.Japanese),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.Japanese, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.Japanese),
+                    onFailed: (r) => _onFailed(SystemLanguage.Japanese, r));
                 Prepare(SystemLanguage.ChineseSimplified,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.ChineseSimplified),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.ChineseSimplified, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.ChineseSimplified),
+                    onFailed: (r) => _onFailed(SystemLanguage.ChineseSimplified, r));
                 Prepare(SystemLanguage.ChineseTraditional,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.ChineseTraditional),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.ChineseTraditional, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.ChineseTraditional),
+                    onFailed: (r) => _onFailed(SystemLanguage.ChineseTraditional, r));
                 Prepare(SystemLanguage.Korean,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.Korean),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.Korean, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.Korean),
+                    onFailed: (r) => _onFailed(SystemLanguage.Korean, r));
                 Prepare(SystemLanguage.French,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.French),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.French, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.French),
+                    onFailed: (r) => _onFailed(SystemLanguage.French, r));
                 Prepare(SystemLanguage.German,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.German),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.German, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.German),
+                    onFailed: (r) => _onFailed(SystemLanguage.German, r));
             }
             public static void Prepare(SystemLanguage language, System.Action onSuccess = null, System.Action<Loader.AssetHandle> onFailed = null)
             {
@@ -175,29 +225,55 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
         public static class ItemUIDiscript
         {
             internal static Dictionary<SystemLanguage, UISystemTextData> TextDic = null;
-            public static void PrepareAllSupportedLanguages(System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
+            public static void PrepareAllSupportedLanguages(System.Action onAllSuccess = null, System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
             {
+                HashSet<SystemLanguage> waitLangs = new HashSet<SystemLanguage>() {
+                    SystemLanguage.English,
+                    SystemLanguage.Japanese,
+                    SystemLanguage.ChineseSimplified,
+                    SystemLanguage.ChineseTraditional,
+                    SystemLanguage.Korean,
+                    SystemLanguage.French,
+                    SystemLanguage.German
+                };
+                var _onSuccess = new System.Action<SystemLanguage>((language) =>
+                {
+                    onSuccess?.Invoke(language);
+                    waitLangs.Remove(language);
+                    if (waitLangs != null && waitLangs.Count <= 0)
+                    {
+                        onAllSuccess?.Invoke();
+                        onAllSuccess = null;
+                    }
+                });
+                var _onFailed = new System.Action<SystemLanguage, Loader.AssetHandle>((language, handle) =>
+                {
+                    onFailed?.Invoke(language, handle);
+                    if (waitLangs != null)
+                        waitLangs = null;
+                });
+
                 Prepare(SystemLanguage.English,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.English),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.English, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.English),
+                    onFailed: (r) => _onFailed(SystemLanguage.English, r));
                 Prepare(SystemLanguage.Japanese,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.Japanese),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.Japanese, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.Japanese),
+                    onFailed: (r) => _onFailed(SystemLanguage.Japanese, r));
                 Prepare(SystemLanguage.ChineseSimplified,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.ChineseSimplified),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.ChineseSimplified, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.ChineseSimplified),
+                    onFailed: (r) => _onFailed(SystemLanguage.ChineseSimplified, r));
                 Prepare(SystemLanguage.ChineseTraditional,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.ChineseTraditional),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.ChineseTraditional, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.ChineseTraditional),
+                    onFailed: (r) => _onFailed(SystemLanguage.ChineseTraditional, r));
                 Prepare(SystemLanguage.Korean,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.Korean),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.Korean, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.Korean),
+                    onFailed: (r) => _onFailed(SystemLanguage.Korean, r));
                 Prepare(SystemLanguage.French,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.French),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.French, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.French),
+                    onFailed: (r) => _onFailed(SystemLanguage.French, r));
                 Prepare(SystemLanguage.German,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.German),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.German, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.German),
+                    onFailed: (r) => _onFailed(SystemLanguage.German, r));
             }
             public static void Prepare(SystemLanguage language, System.Action onSuccess = null, System.Action<Loader.AssetHandle> onFailed = null)
             {
@@ -258,29 +334,55 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
         public static class UIText
         {
             internal static Dictionary<SystemLanguage, UISystemTextData> TextDic = null;
-            public static void PrepareAllSupportedLanguages(System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
+            public static void PrepareAllSupportedLanguages(System.Action onAllSuccess = null, System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
             {
+                HashSet<SystemLanguage> waitLangs = new HashSet<SystemLanguage>() {
+                    SystemLanguage.English,
+                    SystemLanguage.Japanese,
+                    SystemLanguage.ChineseSimplified,
+                    SystemLanguage.ChineseTraditional,
+                    SystemLanguage.Korean,
+                    SystemLanguage.French,
+                    SystemLanguage.German
+                };
+                var _onSuccess = new System.Action<SystemLanguage>((language) =>
+                {
+                    onSuccess?.Invoke(language);
+                    waitLangs.Remove(language);
+                    if (waitLangs != null && waitLangs.Count <= 0)
+                    {
+                        onAllSuccess?.Invoke();
+                        onAllSuccess = null;
+                    }
+                });
+                var _onFailed = new System.Action<SystemLanguage, Loader.AssetHandle>((language, handle) =>
+                {
+                    onFailed?.Invoke(language, handle);
+                    if (waitLangs != null)
+                        waitLangs = null;
+                });
+
                 Prepare(SystemLanguage.English,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.English),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.English, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.English),
+                    onFailed: (r) => _onFailed(SystemLanguage.English, r));
                 Prepare(SystemLanguage.Japanese,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.Japanese),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.Japanese, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.Japanese),
+                    onFailed: (r) => _onFailed(SystemLanguage.Japanese, r));
                 Prepare(SystemLanguage.ChineseSimplified,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.ChineseSimplified),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.ChineseSimplified, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.ChineseSimplified),
+                    onFailed: (r) => _onFailed(SystemLanguage.ChineseSimplified, r));
                 Prepare(SystemLanguage.ChineseTraditional,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.ChineseTraditional),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.ChineseTraditional, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.ChineseTraditional),
+                    onFailed: (r) => _onFailed(SystemLanguage.ChineseTraditional, r));
                 Prepare(SystemLanguage.Korean,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.Korean),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.Korean, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.Korean),
+                    onFailed: (r) => _onFailed(SystemLanguage.Korean, r));
                 Prepare(SystemLanguage.French,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.French),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.French, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.French),
+                    onFailed: (r) => _onFailed(SystemLanguage.French, r));
                 Prepare(SystemLanguage.German,
-                    onSuccess: () => onSuccess?.Invoke(SystemLanguage.German),
-                    onFailed: (r) => onFailed?.Invoke(SystemLanguage.German, r));
+                    onSuccess: () => _onSuccess(SystemLanguage.German),
+                    onFailed: (r) => _onFailed(SystemLanguage.German, r));
             }
             public static void Prepare(SystemLanguage language, System.Action onSuccess = null, System.Action<Loader.AssetHandle> onFailed = null)
             {
