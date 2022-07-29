@@ -431,5 +431,87 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
                 return TextDic[language].str[systemId];
             }
         }
+
+        public static class MonsterName
+        {
+            public static void PrepareAllSupportedLanguages(System.Action onAllSuccess = null, System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
+            {
+                UIText.PrepareAllSupportedLanguages(onAllSuccess, onSuccess, onFailed);
+            }
+            public static void Prepare(SystemLanguage language, System.Action onSuccess = null, System.Action<Loader.AssetHandle> onFailed = null)
+            {
+                UIText.Prepare(language, onSuccess, onFailed);
+            }
+            public static bool IsReady(SystemLanguage language)
+            {
+                return UIText.IsReady(language);
+            }
+            public static bool IsGameDataReady()
+            {
+                return UIText.IsGameDataReady();
+            }
+
+            public static string GetText(MonsterDataID monsterId, SystemLanguage language)
+            {
+                if (IsGameDataReady() == false)
+                    throw new RF5DataWasNotLoaded($"{nameof(MonsterName)} {typeof(MonsterDataTable)} was not loaded yet. please wait for \"{nameof(MonsterDataTable.GetDataTable)}\" returns not empty.");
+
+                return GetText(MonsterDataTable.GetDataTable(monsterId), language);
+            }
+            public static string GetText(MonsterDataID monsterId)
+            {
+                return GetText(monsterId, LanguageManager.GetLanguage());
+            }
+            public static string GetText(MonsterDataTable monsterDataTable, SystemLanguage language)
+            {
+                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERNAME_000 + ((int)monsterDataTable.MonsterId - 1));
+                return UIText.GetText(dicId, language);
+            }
+            public static string GetText(MonsterDataTable monsterDataTable)
+            {
+                return GetText(monsterDataTable, LanguageManager.GetLanguage());
+            }
+        }
+
+        public static class MonsterDetail
+        {
+            public static void PrepareAllSupportedLanguages(System.Action onAllSuccess = null, System.Action<SystemLanguage> onSuccess = null, System.Action<SystemLanguage, Loader.AssetHandle> onFailed = null)
+            {
+                UIText.PrepareAllSupportedLanguages(onAllSuccess, onSuccess, onFailed);
+            }
+            public static void Prepare(SystemLanguage language, System.Action onSuccess = null, System.Action<Loader.AssetHandle> onFailed = null)
+            {
+                UIText.Prepare(language, onSuccess, onFailed);
+            }
+            public static bool IsReady(SystemLanguage language)
+            {
+                return UIText.IsReady(language);
+            }
+            public static bool IsGameDataReady()
+            {
+                return UIText.IsGameDataReady();
+            }
+
+            public static string GetText(MonsterDataID monsterId, SystemLanguage language)
+            {
+                if (IsGameDataReady() == false)
+                    throw new RF5DataWasNotLoaded($"{nameof(MonsterName)} {typeof(MonsterDataTable)} was not loaded yet. please wait for \"{nameof(MonsterDataTable.GetDataTable)}\" returns not empty.");
+
+                return GetText(MonsterDataTable.GetDataTable(monsterId), language);
+            }
+            public static string GetText(MonsterDataID monsterId)
+            {
+                return GetText(monsterId, LanguageManager.GetLanguage());
+            }
+            public static string GetText(MonsterDataTable monsterDataTable, SystemLanguage language)
+            {
+                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERNAME_000 + ((int)monsterDataTable.MonsterId - 1));
+                return UIText.GetText(dicId, language);
+            }
+            public static string GetText(MonsterDataTable monsterDataTable)
+            {
+                return GetText(monsterDataTable, LanguageManager.GetLanguage());
+            }
+        }
     }
 }
