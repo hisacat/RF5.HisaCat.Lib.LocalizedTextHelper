@@ -22,6 +22,7 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
 
         public override void Load()
         {
+            return;
             try
             {
                 Harmony.CreateAndPatchAll(typeof(AssetManagerHooker));
