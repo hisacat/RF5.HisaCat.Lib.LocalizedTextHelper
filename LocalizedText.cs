@@ -451,25 +451,33 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
                 return UIText.IsGameDataReady();
             }
 
-            public static string GetText(MonsterDataID monsterId, SystemLanguage language)
+            public static string GetText(MonsterDataID monsterDataId, SystemLanguage language)
             {
                 if (IsGameDataReady() == false)
                     throw new RF5DataWasNotLoaded($"{nameof(MonsterName)} {typeof(MonsterDataTable)} was not loaded yet. please wait for \"{nameof(MonsterDataTable.GetDataTable)}\" returns not empty.");
 
-                return GetText(MonsterDataTable.GetDataTable(monsterId), language);
+                return GetText(MonsterDataTable.GetDataTable(monsterDataId), language);
             }
-            public static string GetText(MonsterDataID monsterId)
+            public static string GetText(MonsterDataID monsterDataId)
             {
-                return GetText(monsterId, LanguageManager.GetLanguage());
+                return GetText(monsterDataId, LanguageManager.GetLanguage());
             }
             public static string GetText(MonsterDataTable monsterDataTable, SystemLanguage language)
             {
-                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERNAME_000 + ((int)monsterDataTable.MonsterId - 1));
-                return UIText.GetText(dicId, language);
+                return GetText(monsterDataTable.MonsterId, language);
             }
             public static string GetText(MonsterDataTable monsterDataTable)
             {
                 return GetText(monsterDataTable, LanguageManager.GetLanguage());
+            }
+            public static string GetText(MonsterID monsterId, SystemLanguage language)
+            {
+                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERNAME_000 + ((int)monsterId - 1));
+                return UIText.GetText(dicId, language);
+            }
+            public static string GetText(MonsterID monsterId)
+            {
+                return GetText(monsterId, LanguageManager.GetLanguage());
             }
         }
 
@@ -492,25 +500,33 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
                 return UIText.IsGameDataReady();
             }
 
-            public static string GetText(MonsterDataID monsterId, SystemLanguage language)
+            public static string GetText(MonsterDataID monsterDataId, SystemLanguage language)
             {
                 if (IsGameDataReady() == false)
-                    throw new RF5DataWasNotLoaded($"{nameof(MonsterName)} {typeof(MonsterDataTable)} was not loaded yet. please wait for \"{nameof(MonsterDataTable.GetDataTable)}\" returns not empty.");
+                    throw new RF5DataWasNotLoaded($"{nameof(MonsterDetail)} {typeof(MonsterDataTable)} was not loaded yet. please wait for \"{nameof(MonsterDataTable.GetDataTable)}\" returns not empty.");
 
-                return GetText(MonsterDataTable.GetDataTable(monsterId), language);
+                return GetText(MonsterDataTable.GetDataTable(monsterDataId), language);
             }
-            public static string GetText(MonsterDataID monsterId)
+            public static string GetText(MonsterDataID monsterDataId)
             {
-                return GetText(monsterId, LanguageManager.GetLanguage());
+                return GetText(monsterDataId, LanguageManager.GetLanguage());
             }
             public static string GetText(MonsterDataTable monsterDataTable, SystemLanguage language)
             {
-                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERDETAIL_000 + ((int)monsterDataTable.MonsterId - 1));
-                return UIText.GetText(dicId, language);
+                return GetText(monsterDataTable.MonsterId, language);
             }
             public static string GetText(MonsterDataTable monsterDataTable)
             {
                 return GetText(monsterDataTable, LanguageManager.GetLanguage());
+            }
+            public static string GetText(MonsterID monsterId, SystemLanguage language)
+            {
+                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERDETAIL_000 + ((int)monsterId - 1));
+                return UIText.GetText(dicId, language);
+            }
+            public static string GetText(MonsterID monsterId)
+            {
+                return GetText(monsterId, LanguageManager.GetLanguage());
             }
         }
     }
