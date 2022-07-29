@@ -184,7 +184,6 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             }
             public static bool IsGameDataReady()
             {
-                if (SV.UIRes == null) return false;
                 return ItemDataTable.Length() > 0;
             }
 
@@ -293,7 +292,6 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             }
             public static bool IsGameDataReady()
             {
-                if (SV.UIRes == null) return false;
                 return ItemDataTable.Length() > 0;
             }
 
@@ -402,7 +400,6 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             }
             public static bool IsGameDataReady()
             {
-                if (SV.UIRes == null) return false;
                 return UITextDic.SystemIdDic != null && UITextDic.SystemIdDic.count > 0;
             }
 
@@ -472,8 +469,11 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             }
             public static string GetText(MonsterID monsterId, SystemLanguage language)
             {
-                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERNAME_000 + ((int)monsterId - 1));
-                return UIText.GetText(dicId, language);
+                UITextDic.DICID dicId;
+                if (UITextDic.DICID.TryParse(string.Format("MONSTERNAME_{0:000}", (int)monsterId - 1), out dicId))
+                    return UIText.GetText(dicId, language);
+                else
+                    return string.Empty;
             }
             public static string GetText(MonsterID monsterId)
             {
@@ -521,8 +521,11 @@ namespace RF5.HisaCat.Lib.LocalizedTextHelper
             }
             public static string GetText(MonsterID monsterId, SystemLanguage language)
             {
-                UITextDic.DICID dicId = (UITextDic.DICID)((int)UITextDic.DICID.MONSTERDETAIL_000 + ((int)monsterId - 1));
-                return UIText.GetText(dicId, language);
+                UITextDic.DICID dicId;
+                if (UITextDic.DICID.TryParse(string.Format("MONSTERDETAIL_{0:000}", (int)monsterId - 1), out dicId))
+                    return UIText.GetText(dicId, language);
+                else
+                    return string.Empty;
             }
             public static string GetText(MonsterID monsterId)
             {
